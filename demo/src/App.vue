@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/d3.vue'
+import HelloWorld from './components/FamilyTree.vue'
 
 export default {
   name: 'App',
@@ -17,11 +17,11 @@ export default {
 
 <style>
 #app {
+  color: #2c3e50;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
+  text-align: center;
 }
 </style>
