@@ -32,9 +32,10 @@ export default {
   },
   methods: {
     appendNode(node) {
-      console.log(node)
+      const manGrp = node.append('g').attr('class', 'main')
+      const comGrp = node.append('g').attr('class', 'comp')
 
-      node
+      manGrp
         .append('image')
         .attr('x', -16)
         .attr('y', -16)
@@ -44,7 +45,7 @@ export default {
           return d.data.gender == 'f' ? female : male
         })
 
-      node
+      manGrp
         .append('text')
         .attr('dy', '0.31em')
         .attr('class', 'name')
@@ -61,30 +62,42 @@ export default {
       // for (var item in node.data.companion) {
       //   console.log(item)
       // }
+      const compNode = comGrp.selectAll('g').data(function(d) {
+        console.log('companion:', d.data.companion)
+        return d.data.companion || []
+      })
 
-      node
+      compNode
+        .enter()
+        // .append('g')
+        // .attr('class','comp')
         .append('image')
         .attr('x', 16)
         .attr('y', -18)
         .attr('width', 32)
         .attr('height', 32)
         .attr('href', function(d) {
-          return d.data.gender == 'm' ? female : male
+          return d && d.gender == 'm' ? male : female
         })
-
-      node
         .append('text')
         .attr('dy', '0.31em')
         .attr('class', 'name')
         .attr('x', 32)
         .attr('y', 24)
         .attr('text-anchor', 'middle')
-        .text(d => d.data.name)
+        .text(d => {
+          console.log('d:', d)
+          return d && d.name
+        })
         .clone(true)
         .lower()
         .attr('stroke-linejoin', 'round')
         .attr('stroke-width', 3)
         .attr('stroke', 'white')
+
+      node.merge(compNode)
+
+      compNode.exit().remove()
     }
   },
   mounted() {
@@ -182,7 +195,7 @@ export default {
           'resize',
           window.ResizeObserver ? null : () => () => svg.dispatch('toggle')
         )
-      
+
       console.log(nodes)
 
       // Update the nodes…

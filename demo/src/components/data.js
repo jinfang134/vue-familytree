@@ -2,6 +2,10 @@ export default {
   'name': '张三',
   'value': 1,
   gender: 'm',
+  companion: [{
+    name: '王五',
+    gender: 'f'
+  }],
   'children': [{
       'name': '张三一',
       'value': 23,
