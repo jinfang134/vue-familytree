@@ -11,7 +11,7 @@ import female from './female.svg'
 import male from './male.svg'
 
 export default {
-  data () {
+  data() {
     return {
       nodeId: '',
       nodeName: '',
@@ -31,14 +31,18 @@ export default {
     }
   },
   methods: {
-    appendNode (node) {
+    appendNode(node) {
+      console.log(node)
+
       node
         .append('image')
         .attr('x', -16)
         .attr('y', -16)
         .attr('width', 32)
         .attr('height', 32)
-        .attr('href', male)
+        .attr('href', function(d) {
+          return d.data.gender == 'f' ? female : male
+        })
 
       node
         .append('text')
@@ -54,13 +58,19 @@ export default {
         .attr('stroke-width', 3)
         .attr('stroke', 'white')
 
+      // for (var item in node.data.companion) {
+      //   console.log(item)
+      // }
+
       node
         .append('image')
         .attr('x', 16)
-        .attr('y', -16)
+        .attr('y', -18)
         .attr('width', 32)
         .attr('height', 32)
-        .attr('href', female)
+        .attr('href', function(d) {
+          return d.data.gender == 'm' ? female : male
+        })
 
       node
         .append('text')
@@ -77,7 +87,7 @@ export default {
         .attr('stroke', 'white')
     }
   },
-  mounted () {
+  mounted() {
     let clientWidth = document.body.clientWidth
     let clientHeight = document.body.clientHeight
     this.width = Math.floor(clientWidth * 0.6)
@@ -138,14 +148,13 @@ export default {
     zoomHandler(svg)
 
     // Zoom functions
-    function zoomActions () {
+    function zoomActions() {
       gNode.attr('transform', d3.event.transform)
       gLink.attr('transform', d3.event.transform)
     }
     // ***********************************************
     const self = this
-    function update (source) {
-      console.log('source: ', source)
+    function update(source) {
       const duration = d3.event && d3.event.altKey ? 2500 : 250
       const nodes = root.descendants().reverse()
       const links = root.links()
@@ -173,6 +182,8 @@ export default {
           'resize',
           window.ResizeObserver ? null : () => () => svg.dispatch('toggle')
         )
+      
+      console.log(nodes)
 
       // Update the nodes…
       const node = gNode.selectAll('g').data(nodes, d => d.id)
@@ -195,12 +206,12 @@ export default {
         .merge(nodeEnter)
         .transition(transition)
         .attr('transform', d => `translate(${d.x},${d.y})`)
-        .attr('cursor', function (d) {
+        .attr('cursor', function(d) {
           return d._children || d.children ? 'pointer' : ''
         })
         .attr('fill-opacity', 1)
         .attr('stroke-opacity', 1)
-      console.log(nodeUpdate) // eslint-disable-line
+      // console.log(nodeUpdate) // eslint-disable-line
 
       // Transition exiting nodes to the parent's new position.
       const nodeExit = node
@@ -211,7 +222,7 @@ export default {
         .attr('fill-opacity', 0)
         .attr('stroke-opacity', 0)
 
-      console.log(nodeExit) // eslint-disable-line
+      // console.log(nodeExit) // eslint-disable-line
 
       // Update the links…
       const link = gLink.selectAll('path').data(links, d => d.target.id)
