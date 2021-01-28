@@ -89,6 +89,20 @@
             }
         }
 
+        // ****************  zoom ************************
+        // add zoom capabilities
+        let zoomHandler = d3.zoom()
+            .on('zoom', zoomActions)
+            .scaleExtent([1 / 2, 8])
+        svg.call(zoomHandler).on('dblclick.zoom', null)
+        zoomHandler(svg)
+        // Zoom functions
+        function zoomActions() {
+            gNode.attr('transform', d3.event.transform)
+            gLink.attr('transform', d3.event.transform)
+        }
+        // ***********************************************
+
         function update(source) {
             console.log(source)
             console.log('root', root)
