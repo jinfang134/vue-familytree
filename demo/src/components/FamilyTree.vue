@@ -67,10 +67,9 @@ export default {
         return d.data.companion || []
       })
 
-      compNode
-        .enter()
-        // .append('g')
-        // .attr('class','comp')
+      const compEnter = compNode.enter().append('g')
+
+      compEnter
         .append('image')
         .attr('x', 16)
         .attr('y', -18)
@@ -79,6 +78,8 @@ export default {
         .attr('href', function(d) {
           return d && d.gender == 'm' ? male : female
         })
+
+      compEnter
         .append('text')
         .attr('dy', '0.31em')
         .attr('class', 'name')
@@ -95,7 +96,7 @@ export default {
         .attr('stroke-width', 3)
         .attr('stroke', 'white')
 
-      node.merge(compNode)
+      compEnter.merge(node)
 
       compNode.exit().remove()
     }
