@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <FamilyTree :data="data"/>
+    <FamilyTree :data="data" @click="handleClick" />
   </div>
 </template>
 
@@ -10,13 +10,18 @@ import data from './data'
 
 export default {
   name: 'App',
-  data(){
+  data() {
     return {
       data: data
     }
   },
   components: {
     FamilyTree
+  },
+  methods: {
+    handleClick(person) {
+      alert(person.name)
+    }
   }
 }
 </script>

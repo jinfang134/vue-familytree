@@ -43,12 +43,17 @@ export default {
       //   .attr('width', '100px')
       // node.style('fill', 'white').style('stroke', 'green')
 
-      const manGrp = node.append('g').attr('class', 'main')
+      const manGrp = node
+        .append('g')
+        .attr('class', 'main')
+        .on('mouseover', (d, index,e) => {
+          console.log('mouseon:',d3.event)
+        })
       const comGrp = node.append('g').attr('class', 'comp')
       {
         manGrp
           .append('image')
-          .attr('x', -16)
+          .attr('x', -18)
           .attr('y', -16)
           .attr('width', 32)
           .attr('height', 32)
@@ -91,10 +96,6 @@ export default {
         .attr('width', 32)
         .attr('height', 32)
         .attr('href', function(d) {
-          // if (d.data.companion && d.data.companion.length > 0) {
-          //   return d.data.companion[0].gender == 'm' ? male : female
-          // }
-          // return male
           return d.gender == 'f' ? female : male
         })
 
@@ -229,6 +230,7 @@ export default {
         .on('click', d => {
           d.children = d.children ? null : d._children
           update(d)
+          event.preventDefault()
         })
       self.appendNode(nodeEnter)
 
@@ -305,8 +307,7 @@ export default {
 }
 
 .family {
-  /* fill: #aaa; */
-  outline: thin dashed #4c85d1;
+  /* outline: thin dashed #4c85d1; */
   padding-top: 10px;
 }
 </style>
