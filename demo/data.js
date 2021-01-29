@@ -3,13 +3,9 @@ export default {
   'value': 1,
   gender: 'm',
   companion: [{
-      name: 'wife 1',
+      name: '李四娟',
       gender: 'f'
     },
-    {
-      name: 'wife 2',
-      gender: 'f'
-    }
   ],
   'children': [{
       'name': '张三一',
