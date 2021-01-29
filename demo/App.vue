@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <FamilyTree :data="data"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/FamilyTree.vue'
+import FamilyTree from '../src/FamilyTree.vue'
+import data from './data'
 
 export default {
   name: 'App',
+  data(){
+    return {
+      data: data
+    }
+  },
   components: {
-    HelloWorld
+    FamilyTree
   }
 }
 </script>

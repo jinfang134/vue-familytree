@@ -6,11 +6,16 @@
 
 <script>
 import * as d3 from 'd3'
-import data from './data'
+// import data from './data'
 import female from './female.svg'
 import male from './male.svg'
 
 export default {
+  props:{
+    data: {
+      type: Array,
+    }
+  },
   data() {
     return {
       nodeId: '',
@@ -123,7 +128,7 @@ export default {
       .x(d => d.x)
       .y(d => d.y)
 
-    const root = d3.hierarchy(data)
+    const root = d3.hierarchy(this.data)
 
     root.x0 = 0
     root.y0 = 0

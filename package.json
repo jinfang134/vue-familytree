@@ -1,19 +1,21 @@
 {
   "name": "familytree",
   "version": "0.1.0",
-  "private": true,
+  "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "preversion": "npm test && npm run lint",
+    "version": "git add .",
+    "postversion": "git push origin master && git push --tags && npm publish --registry=https://registry.npmjs.org/"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "d3": "^5.12.0",
-    "gsap": "^3.5.1",
-    "vue": "^2.6.11"
+    "d3": "^5.12.0"
   },
   "devDependencies": {
+    "vue": "^2.6.11",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
