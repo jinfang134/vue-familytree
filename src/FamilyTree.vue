@@ -37,17 +37,11 @@ export default {
   },
   methods: {
     appendNode(node) {
-      // const container = node
-      //   .append('rect')
-      //   .attr('height', '32px')
-      //   .attr('width', '100px')
-      // node.style('fill', 'white').style('stroke', 'green')
-
       const manGrp = node
         .append('g')
         .attr('class', 'main')
-        .on('mouseover', (d, index,e) => {
-          console.log('mouseon:',d3.event)
+        .on('mouseover', (d, index, e) => {
+          console.log('mouseon:', d3.event)
         })
       const comGrp = node.append('g').attr('class', 'comp')
       {

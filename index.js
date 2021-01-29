@@ -18,7 +18,7 @@ function install(Vue, options) {
   }
 
   // Declare the component
-  Vue.component("vue-pipeline", FamilyTree)
+  Vue.component("vue-familytree", FamilyTree)
 }
 
 // Create module definition for Vue.use()
