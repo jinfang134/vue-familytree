@@ -11,9 +11,9 @@ import female from './female.svg'
 import male from './male.svg'
 
 export default {
-  props:{
+  props: {
     data: {
-      type: Array,
+      type: Array
     }
   },
   data() {
@@ -37,54 +37,68 @@ export default {
   },
   methods: {
     appendNode(node) {
+      // const container = node
+      //   .append('rect')
+      //   .attr('height', '32px')
+      //   .attr('width', '100px')
+      // node.style('fill', 'white').style('stroke', 'green')
+
       const manGrp = node.append('g').attr('class', 'main')
       const comGrp = node.append('g').attr('class', 'comp')
+      {
+        manGrp
+          .append('image')
+          .attr('x', -16)
+          .attr('y', -16)
+          .attr('width', 32)
+          .attr('height', 32)
+          .attr('href', function(d) {
+            return d.data.gender == 'f' ? female : male
+          })
 
-      manGrp
+        manGrp
+          .append('text')
+          .attr('dy', '0.31em')
+          .attr('class', 'name')
+          .attr('x', 0)
+          .attr('y', 24)
+          .attr('text-anchor', 'middle')
+          .text(d => d.data.name)
+          .clone(true)
+          .lower()
+          .attr('stroke-linejoin', 'round')
+          .attr('stroke-width', 3)
+          .attr('stroke', 'white')
+      }
+
+      const subGrp = comGrp.selectAll('g').data(d => {
+        return (d.data && d.data.companion) || []
+      })
+
+      const comEnter = subGrp
+        .enter()
+        .append('g')
+        .attr('class', 'companions')
+        .attr('transform', (data, index) => {
+          console.log(data, index)
+          return `translate(${index * 32},0)`
+        })
+
+      comEnter
         .append('image')
-        .attr('x', -16)
+        .attr('x', 16)
         .attr('y', -16)
         .attr('width', 32)
         .attr('height', 32)
         .attr('href', function(d) {
-          return d.data.gender == 'f' ? female : male
+          // if (d.data.companion && d.data.companion.length > 0) {
+          //   return d.data.companion[0].gender == 'm' ? male : female
+          // }
+          // return male
+          return d.gender == 'f' ? female : male
         })
 
-      manGrp
-        .append('text')
-        .attr('dy', '0.31em')
-        .attr('class', 'name')
-        .attr('x', 0)
-        .attr('y', 24)
-        .attr('text-anchor', 'middle')
-        .text(d => d.data.name)
-        .clone(true)
-        .lower()
-        .attr('stroke-linejoin', 'round')
-        .attr('stroke-width', 3)
-        .attr('stroke', 'white')
-
-      // for (var item in node.data.companion) {
-      //   console.log(item)
-      // }
-      const compNode = comGrp.selectAll('g').data(function(d) {
-        console.log('companion:', d.data.companion)
-        return d.data.companion || []
-      })
-
-      const compEnter = compNode.enter().append('g')
-
-      compEnter
-        .append('image')
-        .attr('x', 16)
-        .attr('y', -18)
-        .attr('width', 32)
-        .attr('height', 32)
-        .attr('href', function(d) {
-          return d && d.gender == 'm' ? male : female
-        })
-
-      compEnter
+      comEnter
         .append('text')
         .attr('dy', '0.31em')
         .attr('class', 'name')
@@ -92,8 +106,7 @@ export default {
         .attr('y', 24)
         .attr('text-anchor', 'middle')
         .text(d => {
-          console.log('d:', d)
-          return d && d.name
+          return d.name
         })
         .clone(true)
         .lower()
@@ -101,9 +114,7 @@ export default {
         .attr('stroke-width', 3)
         .attr('stroke', 'white')
 
-      compEnter.merge(node)
-
-      compNode.exit().remove()
+      subGrp.exit().remove()
     }
   },
   mounted() {
@@ -202,15 +213,16 @@ export default {
           window.ResizeObserver ? null : () => () => svg.dispatch('toggle')
         )
 
-      console.log(nodes)
+      // console.log(nodes)
 
       // Update the nodes…
-      const node = gNode.selectAll('g').data(nodes, d => d.id)
+      const node = gNode.selectAll('g.family').data(nodes, d => d.id)
 
       // Enter any new nodes at the parent's previous position.
       const nodeEnter = node
         .enter()
         .append('g')
+        .attr('class', 'family')
         .attr('transform', () => `translate(${source.x0},${source.y0})`)
         .attr('fill-opacity', 0)
         .attr('stroke-opacity', 0)
@@ -290,5 +302,11 @@ export default {
 
 .name {
   font: normal 9px sans-serif;
+}
+
+.family {
+  /* fill: #aaa; */
+  outline: thin dashed #4c85d1;
+  padding-top: 10px;
 }
 </style>
