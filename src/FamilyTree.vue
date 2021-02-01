@@ -45,24 +45,45 @@ export default {
       //   .append('g')
       //   .attr('class', 'btn-more')
 
-      node
-        .append('circle', d => {
-          return d.data.children
-        })
+      const btnGrp = node.selectAll('g.btn').data(d => {
+        console.log('d:', d)
+        if (d.children) {
+          return [1]
+        }
+        if (d._children) {
+          return [0]
+        }
+        return []
+      })
+
+      const btnEnter = btnGrp
+        .enter()
+        .append('g')
+        .attr('class', 'btn')
+      // .attr('transform', (data, index) => {
+      //   return `translate(${index * 32},0)`
+      // })
+
+      btnEnter
+        .append('circle')
         .attr('cx', 0)
         .attr('cy', 34)
         .attr('r', 6)
         .attr('class', 'btn-more')
 
-      node
+      btnEnter
         .append('text')
         .attr('dy', '0.31em')
         .attr('x', 0)
         .attr('y', 34.5)
         .attr('text-anchor', 'middle')
         .text(d => {
-          return d.data.children ? '+' : '-'
+          console.log(d)
+          return d == 1 ? '-' : '+'
         })
+
+      btnGrp.exit().remove()
+      node.merge(btnEnter)
     },
     appendNode(node) {
       const margin = 4
