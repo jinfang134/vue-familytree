@@ -6,14 +6,13 @@
 
 <script>
 import * as d3 from 'd3'
-// import data from './data'
 import female from './female.svg'
 import male from './male.svg'
 
 export default {
   props: {
     data: {
-      type: Array
+      type: Object
     }
   },
   data() {
@@ -36,39 +35,74 @@ export default {
     }
   },
   methods: {
-    appendNode(node) {
-      const manGrp = node
-        .append('g')
-        .attr('class', 'main')
-        .on('mouseover', (d, index, e) => {
-          console.log('mouseon:', d3.event)
-        })
-      const comGrp = node.append('g').attr('class', 'comp')
-      {
-        manGrp
-          .append('image')
-          .attr('x', -18)
-          .attr('y', -16)
-          .attr('width', 32)
-          .attr('height', 32)
-          .attr('href', function(d) {
-            return d.data.gender == 'f' ? female : male
-          })
+    appendButton(node) {
+      // const btnGrp = node
+      //   .selectAll('g.btn-more')
+      //   .data(d => {
+      //     return d.data && d.data.children ? ['+'] : []
+      //   })
+      //   .enter()
+      //   .append('g')
+      //   .attr('class', 'btn-more')
 
-        manGrp
-          .append('text')
-          .attr('dy', '0.31em')
-          .attr('class', 'name')
-          .attr('x', 0)
-          .attr('y', 24)
-          .attr('text-anchor', 'middle')
-          .text(d => d.data.name)
-          .clone(true)
-          .lower()
-          .attr('stroke-linejoin', 'round')
-          .attr('stroke-width', 3)
-          .attr('stroke', 'white')
-      }
+      node
+        .append('circle', d => {
+          return d.data.children
+        })
+        .attr('cx', 0)
+        .attr('cy', 34)
+        .attr('r', 6)
+        .attr('class', 'btn-more')
+
+      node
+        .append('text')
+        .attr('dy', '0.31em')
+        .attr('x', 0)
+        .attr('y', 34.5)
+        .attr('text-anchor', 'middle')
+        .text(d => {
+          return d.data.children ? '+' : '-'
+        })
+    },
+    appendNode(node) {
+      const margin = 4
+      const imageWidth = 32
+
+      const container = node
+        .append('rect')
+        .attr('x', -(imageWidth + margin * 2) / 2)
+        .attr('y', -18)
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .attr('width', d => {
+          const list = (d.data && d.data.companion) || []
+          return imageWidth + margin * 2 + list.length * 32
+        })
+        .attr('class', 'container')
+
+      this.appendButton(node)
+
+      const manGrp = node.append('g').attr('class', 'main')
+      const comGrp = node.append('g').attr('class', 'comp')
+
+      manGrp
+        .append('image')
+        .attr('x', -imageWidth / 2)
+        .attr('y', -imageWidth / 2)
+        .attr('width', imageWidth)
+        .attr('height', imageWidth)
+        .attr('href', function(d) {
+          return d.data.gender == 'f' ? female : male
+        })
+
+      manGrp
+        .append('text')
+        .attr('dy', '0.31em')
+        .attr('class', 'name')
+        .attr('x', 0)
+        .attr('y', 24)
+        .attr('text-anchor', 'middle')
+        .text(d => d.data.name)
 
       const subGrp = comGrp.selectAll('g').data(d => {
         return (d.data && d.data.companion) || []
@@ -79,7 +113,6 @@ export default {
         .append('g')
         .attr('class', 'companions')
         .attr('transform', (data, index) => {
-          console.log(data, index)
           return `translate(${index * 32},0)`
         })
 
@@ -103,11 +136,6 @@ export default {
         .text(d => {
           return d.name
         })
-        .clone(true)
-        .lower()
-        .attr('stroke-linejoin', 'round')
-        .attr('stroke-width', 3)
-        .attr('stroke', 'white')
 
       subGrp.exit().remove()
     }
@@ -123,8 +151,8 @@ export default {
 
     let width = this.width
 
-    let dy = 100
-    let dx = 130
+    let dy = 130
+    let dx = 80
 
     let tree = d3.tree().nodeSize([dx, dy])
     // let diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x)
@@ -132,8 +160,7 @@ export default {
     let diagonal = d3
       .linkVertical()
       .x(d => d.x)
-      .y(d => d.y)
-
+      .y(d => d.y + 30)
     const root = d3.hierarchy(this.data)
 
     root.x0 = 0
@@ -180,7 +207,7 @@ export default {
     // ***********************************************
     const self = this
     function update(source) {
-      const duration = d3.event && d3.event.altKey ? 2500 : 250
+      const duration = d3.event && d3.event.altKey ? 2500 : 750
       const nodes = root.descendants().reverse()
       const links = root.links()
 
@@ -238,14 +265,13 @@ export default {
         })
         .attr('fill-opacity', 1)
         .attr('stroke-opacity', 1)
-      // console.log(nodeUpdate) // eslint-disable-line
 
       // Transition exiting nodes to the parent's new position.
       const nodeExit = node
         .exit()
         .transition(transition)
         .remove()
-        .attr('transform', () => `translate(${source.x},${source.y})`)
+        .attr('transform', () => `translate(${source.x},${source.y + 30})`)
         .attr('fill-opacity', 0)
         .attr('stroke-opacity', 0)
 
@@ -258,6 +284,11 @@ export default {
       const linkEnter = link
         .enter()
         .append('path')
+        .attr('class', 'link')
+        .attr('stroke-width', d => {
+          // console.log('d',d)
+          return Math.max(3 - source.depth, 1)
+        })
         .attr('d', () => {
           const o = { x: source.x0, y: source.y0 }
           return diagonal({ source: o, target: o })
@@ -298,10 +329,29 @@ export default {
 
 .name {
   font: normal 9px sans-serif;
+  /* color: #fff; */
+  /* stroke: #aaa; */
+}
+
+.link {
+  stroke: #4c85d1;
 }
 
 .family {
   /* outline: thin dashed #4c85d1; */
   padding-top: 10px;
+}
+
+.btn-more {
+  fill: #fff;
+  stroke: #555;
+}
+
+.container {
+  fill: #c8d14c;
+  stroke: #555;
+  height: 52px;
+  stroke-opacity: 0.1;
+  stroke-width: 0.5;
 }
 </style>

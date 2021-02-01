@@ -3,18 +3,34 @@ export default {
   'value': 1,
   gender: 'm',
   companion: [{
-      name: '李四娟',
-      gender: 'f'
-    },
-  ],
+    name: '李四娟',
+    gender: 'f'
+  }, ],
   'children': [{
       'name': '张三一',
       'value': 23,
       gender: 'male',
       'children': [{
           'name': '张四',
-          'value': 104993,
           gender: 'f',
+          'children': [{
+              'name': '张六一',
+              'value': 9354
+            },
+            {
+              'name': '张六二',
+              'value': 66,
+              'children': [{
+                  'name': '张六一',
+                  'value': 9354
+                },
+                {
+                  'name': '张六二',
+                  'value': 66
+                },
+              ]
+            },
+          ]
         },
         {
           'name': '张五',
@@ -23,7 +39,16 @@ export default {
           companion: [{
             name: '王五',
             gender: 'm'
-          }]
+          }],
+          'children': [{
+              'name': '张六一',
+              'value': 9354
+            },
+            {
+              'name': '张六二',
+              'value': 66
+            },
+          ]
         },
         {
           'name': '张六',
@@ -49,7 +74,25 @@ export default {
                 },
                 {
                   'name': '张九三',
-                  'value': 7673
+                  'value': 7673,
+                  'children': [{
+                      'name': '张六一',
+                      'value': 9354,
+                      'children': [{
+                          'name': '张六一',
+                          'value': 9354
+                        },
+                        {
+                          'name': '张六二',
+                          'value': 66
+                        },
+                      ]
+                    },
+                    {
+                      'name': '张六二',
+                      'value': 66
+                    },
+                  ]
                 }
               ]
             }
@@ -57,7 +100,16 @@ export default {
         },
         {
           'name': 'math',
-          'value': 49
+          'value': 49,
+          'children': [{
+              'name': '张六一',
+              'value': 9354
+            },
+            {
+              'name': '张六二',
+              'value': 66
+            },
+          ]
         }
       ]
     },
