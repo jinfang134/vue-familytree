@@ -73,6 +73,7 @@ export default {
 
       btnEnter
         .append('text')
+        .attr('class', 'status')
         .attr('dy', '0.31em')
         .attr('x', 0)
         .attr('y', 34.5)
@@ -149,6 +150,7 @@ export default {
 
       comEnter
         .append('text')
+
         .attr('dy', '0.31em')
         .attr('class', 'name')
         .attr('x', 32)
@@ -295,6 +297,10 @@ export default {
         .attr('transform', () => `translate(${source.x},${source.y + 30})`)
         .attr('fill-opacity', 0)
         .attr('stroke-opacity', 0)
+
+      node.selectAll('text.status').text(d => {
+        return d.children ? '-' : '+'
+      })
 
       // console.log(nodeExit) // eslint-disable-line
 
